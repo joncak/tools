@@ -1,0 +1,34 @@
+### alias
+alias "kl"="kubectl logs --tail=50 -f"
+alias "kc"="kubectl create -f"
+alias "kv"="kubectl describe"
+alias "kg"="kubectl get"
+alias "ke"="kubectl exec -it"
+alias "kE"="kubectl edit"
+alias watch='watch '
+alias vi='nvim'
+alias vim='nvim'
+alias kpause='kind get nodes|xargs docker pause'
+alias kunpause='kind get nodes|xargs docker unpause'
+
+### funtions
+
+# helm
+helmins() {
+  kubectl -n kube-system create serviceaccount tiller
+  kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+  helm init --service-account=tiller
+}
+
+helmdel() {
+  kubectl -n kube-system delete deployment tiller-deploy
+  kubectl delete clusterrolebinding tiller
+  kubectl -n kube-system delete serviceaccount tiller
+  kubectl -n kube-system delete svc tiller-deploy
+}
+
+# git
+parse_git_branch() {
+             git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
